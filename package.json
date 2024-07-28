@@ -1,8 +1,12 @@
 {
     "private": true,
     "scripts": {
-        "dev": "vite",
-        "build": "vite build"
+     "dev": "npm run development",
+    "development": "mix",
+    "watch": "mix watch",
+    "hot": "mix watch --hot",
+    "prod": "npm run production",
+    "production": "mix --production"
     },
     "devDependencies": {
         "axios": "^1.1.2",
@@ -10,5 +14,9 @@
         "lodash": "^4.17.19",
         "postcss": "^8.1.14",
         "vite": "^4.0.0"
+    },
+    "dependencies": {
+        "bootstrap": "^5.3.3",
+        "jquery": "^3.7.1"
     }
 }
