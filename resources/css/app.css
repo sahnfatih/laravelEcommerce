@@ -1,1 +1,5 @@
-@import "bootstrap;"
+@import '~bootstrap/dist/css/bootstrap.css';
+
+/* Diğer stil kuralları burada olabilir */
+
+
