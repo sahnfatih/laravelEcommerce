@@ -273,17 +273,22 @@
 
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Dashboard</h1>
+        <h1 class="h2">Kullanıcılar</h1>
+<div class = "btn-toolbar mb-2 mb-md-0">
+    <div class ="btn-group me-2">
+        <a href="/users/create" class= "btn bt-sm btn-outline-danger"> Yeni Ekle</a>
 
+    </div>
+
+</div>
       </div>
 
 
-      <h2>Kullanıcılar</h2>
       <div class="table-responsive small">
         <table class="table table-striped table-sm">
           <thead>
             <tr>
-              <th scope="col">#</th>
+              <th scope="col">No</th>
               <th scope="col">Ad Soyad</th>
               <th scope="col">Eposta</th>
               <th scope="col">Durum</th>
@@ -291,6 +296,51 @@
             </tr>
           </thead>
           <tbody>
+          @if(count($users) > 0)
+            @foreach($users as $user)
+                <tr>
+                    <td>{{$loop->iteration}}</td>
+                    <td>{{$user->name}}</td>
+                    <td>{{$user->email}}</td>
+                    <td>{{$user->is_active}}</td>
+                    <td>
+                        <ul class="nav float-start">
+                            <li class="nav-item">
+                                <a class="nav-link text-black" href="{{url("/users/$user->user_id/edit")}}">
+                                    <span data-feather="edit"></span>
+                                    Güncelle
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link list-item-delete text-black"
+                                   href="{{url("/users/$user->user_id")}}">
+                                    <span data-feather="trash-2"></span>
+                                    Sil
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-black"
+                                   href="{{url("/users/$user->user_id/change-password")}}">
+                                    <span data-feather="lock"></span>
+                                    Şifre Değiştir
+                                </a>
+                            </li>
+
+                        </ul>
+                    </td>
+                </tr>
+
+
+                </tr>
+
+            @endforeach
+        @else
+            <tr>
+                <td colspan="5">
+                    <p class="text-center">Herhangi bir kullanıcı bulunamadı.</p>
+                </td>
+            </tr>
+        @endif
 
 
 
@@ -302,6 +352,7 @@
     </main>
   </div>
 </div>
-<script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/app.js') }}">
+ </script>
 
 </html>

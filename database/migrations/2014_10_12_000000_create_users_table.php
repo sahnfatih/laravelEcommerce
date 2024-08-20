@@ -19,9 +19,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->booelan(column:'is_admin');
-            $table->booelan(column:'is_active');
-            $table->rememberToken();
+            $table->boolean('is_admin');
+            $table->boolean('is_active');
             $table->timestamps();
         });
     }
