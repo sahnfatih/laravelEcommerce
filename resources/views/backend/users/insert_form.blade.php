@@ -240,7 +240,8 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2" href="/Users">
+              <a class="nav-link d-flex align-items-center gap-2"
+               href="/Users">
                 <svg class="bi"><use xlink:href="#file-earmark"/></svg>
                 Kullanıcılar
               </a>
@@ -254,80 +255,71 @@
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">Kullanıcılar</h1>
-<div class = "btn-toolbar mb-2 mb-md-0">
-    <div class ="btn-group me-2">
-        <a href="/users/create" class= "btn bt-sm btn-outline-danger"> Yeni Ekle</a>
-
+<div class="btn-toolbar mb-2 mb-md-0">
+    <div class="btn-group me-2">
+        <a href="/users/create" class="btn btn-sm btn-outline-danger">Yeni Ekle</a>
     </div>
-
 </div>
       </div>
 
 
-      <div class="table-responsive small">
-        <table class="table table-striped table-sm">
-          <thead>
-            <tr>
-              <th scope="col">No</th>
-              <th scope="col">Ad Soyad</th>
-              <th scope="col">Eposta</th>
-              <th scope="col">Durum</th>
-              <th scope="col">İşlemler</th>
-            </tr>
-          </thead>
-          <tbody>
-          @if(count($users) > 0)
-            @foreach($users as $user)
-                <tr>
-                    <td>{{$loop->iteration}}</td>
-                    <td>{{$user->name}}</td>
-                    <td>{{$user->email}}</td>
-                    <td>{{$user->is_active}}</td>
-                    <td>
-                        <ul class="nav float-start">
-                            <li class="nav-item">
-                                <a class="nav-link text-black" href="{{url("/users/$user->user_id/edit")}}">
-                                    <span data-feather="edit"></span>
-                                    Güncelle
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link list-item-delete text-black"
-                                   href="{{url("/users/$user->user_id")}}">
-                                    <span data-feather="trash-2"></span>
-                                    Sil
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-black"
-                                   href="{{url("/users/$user->user_id/change-password")}}">
-                                    <span data-feather="lock"></span>
-                                    Şifre Değiştir
-                                </a>
-                            </li>
+      <div class="table-responsive">
+        <form action="{{url("/users")}}" method="POST" autocomplete="off" >
+            @csrf
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="mt-2">
+                       <label for="name" class="form-label" >Ad Soyad</label>
+                       <input type="text" class="form-control" id="name" name="name" placeholder="Ad Soyad Giriniz">
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="mt-2">
+                        <label for="email" class="form-label" >Eposta giriniz</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Eposta giriniz">
+                      </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="mt-2">
+                        <label for="password" class="form-label" >Şifre giriniz</label>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Şifre Giriniz">
+                      </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="mt-2">
+                        <label for="password2" class="form-label" >Şifre Tekrarı</label>
+                       <input type="password" class="form-control" id="password" name="password2" placeholder="Şifre Giriniz">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                 <div class="col-lg-6">
+                    </div class="form-check mt-4">
+                 <input class="form-check-input" type="checkbox" value="" id="is_admin" name="is_admin"></input>
+                    <label class="form-check-label" for="is_admin">
+                    Yetkili Kullanıcı
+                 </label>
+             </div>
+     </div>
+        <div class="col-lg-6">
+            </div class="form-check mt-4">
+                <input class="form-check-input" type="checkbox" value="" id="is_active" name="is_active"></input>
+                   <label class="form-check-label" for="is_active">
+                   Aktif Kullanıcı
+                </label>
+            </div>
+        </div>
+     </div>
+            <div class="row">
+                <div class="col-12">
+                    <button type="submit" class="btn btn-success mt-2"> KAYDET
+                    </button>
+                </div>
+            </div>
+        </form>
 
-                        </ul>
-                    </td>
-                </tr>
-
-
-                </tr>
-
-            @endforeach
-        @else
-            <tr>
-                <td colspan="5">
-                    <p class="text-center">Herhangi bir kullanıcı bulunamadı.</p>
-                </td>
-            </tr>
-        @endif
-
-
-
-
-
-          </tbody>
-        </table>
       </div>
     </main>
   </div>

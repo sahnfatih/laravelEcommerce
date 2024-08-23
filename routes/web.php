@@ -21,3 +21,5 @@ Route::get('/', function () {
 
 
 Route::resource(name: "/Users", controller: UserController::class);
+Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+
