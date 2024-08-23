@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Redirect;
 
 class UserController extends Controller
 {
@@ -39,7 +40,33 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        return "store";
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:2',
+        ]);
+
+       $name = $request->get("name");
+       $email = $request->get("email");
+       $password = $request->get("password");
+       $is_admin = $request->get("is_admin", default: 0);
+       $is_active = $request->get("is_active", default: 0);
+
+       $is_admin = $is_admin ==  "on" ? 1 : 0 ;
+       $is_active= $is_active ==  "on" ? 1 : 0 ;
+
+
+        $user = new User();
+        $user->name = $name;
+        $user->email = $email;
+        $user->password = $password;
+        $user->is_admin = $is_admin;
+        $user->is_active = $is_active;
+
+        $user->save();
+
+
+        return redirect('/users')->with('success', 'Kullanıcı başarıyla kaydedildi!');
     }
 
     /**

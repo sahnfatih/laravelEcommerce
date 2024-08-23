@@ -15,6 +15,7 @@
 
 
     <style>
+
       .bd-placeholder-img {
         font-size: 1.125rem;
         text-anchor: middle;
@@ -297,7 +298,7 @@
             <div class="row">
                  <div class="col-lg-6">
                     </div class="form-check mt-4">
-                 <input class="form-check-input" type="checkbox" value="" id="is_admin" name="is_admin"></input>
+                 <input class="form-check-input" type="checkbox"  id="is_admin" name="is_admin"></input>
                     <label class="form-check-label" for="is_admin">
                     Yetkili Kullanıcı
                  </label>
@@ -305,7 +306,7 @@
      </div>
         <div class="col-lg-6">
             </div class="form-check mt-4">
-                <input class="form-check-input" type="checkbox" value="" id="is_active" name="is_active"></input>
+                <input class="form-check-input" type="checkbox" id="is_active" name="is_active"></input>
                    <label class="form-check-label" for="is_active">
                    Aktif Kullanıcı
                 </label>
