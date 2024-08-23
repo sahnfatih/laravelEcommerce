@@ -22,4 +22,6 @@ Route::get('/', function () {
 
 Route::resource(name: "/Users", controller: UserController::class);
 Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+Route::post('/users', [UserController::class, 'store'])->name('users.store');
+Route::match(['get', 'post'], '/users', [UserController::class, 'store']);
 
