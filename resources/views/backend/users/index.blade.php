@@ -5,6 +5,8 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
 
     <title>Dashboard Users Page</title>
 
@@ -278,7 +280,7 @@
           <tbody>
           @if(count($users) > 0)
             @foreach($users as $user)
-                <tr>
+                <tr id="{{$user->user_id}}">
                     <td>{{$loop->iteration}}</td>
                     <td>{{$user->name}}</td>
                     <td>{{$user->email}}</td>
@@ -309,8 +311,8 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-black"
-                                   href="{{url("/users/$user->user_id/change-password")}}">
+                                <a class="nav-link list-item-delete text-black"
+                                   href="{{url("/users/$user->user_id")}}">
                                     <span data-feather="lock"></span>
                                     Şifre Değiştir
                                 </a>
