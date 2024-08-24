@@ -204,7 +204,7 @@
 </svg>
 
 <header class="navbar sticky-top bg-dark flex-md-nowrap p-0 shadow" data-bs-theme="dark">
-  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 text-white" href="#">Fatih SAHIN</a>
+  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 text-white" href="#">SAHIN Company</a>
 
   <ul class="navbar-nav flex-row d-md-none">
     <li class="nav-item text-nowrap">
@@ -298,7 +298,7 @@
             <div class="row">
                  <div class="col-lg-6">
                     </div class="form-check mt-4">
-                 <input class="form-check-input" type="checkbox"  id="is_admin" name="is_admin"></input>
+                 <input class="form-check-input" type="checkbox"  id="is_admin" name="is_admin" value="1"></input>
                     <label class="form-check-label" for="is_admin">
                     Yetkili Kullanıcı
                  </label>
@@ -306,7 +306,7 @@
      </div>
         <div class="col-lg-6">
             </div class="form-check mt-4">
-                <input class="form-check-input" type="checkbox" id="is_active" name="is_active"></input>
+                <input class="form-check-input" type="checkbox" id="is_active" name="is_active" value="1"></input>
                    <label class="form-check-label" for="is_active">
                    Aktif Kullanıcı
                 </label>
