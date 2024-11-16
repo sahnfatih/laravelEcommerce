@@ -291,7 +291,7 @@
                 <div class="col-lg-6">
                     <div class="mt-2">
                         <label for="password2" class="form-label" >Şifre Tekrarı</label>
-                       <input type="password" class="form-control" id="password" name="password2" placeholder="Şifre Giriniz">
+                       <input type="password" class="form-control" id="password" name="password_confirmation" placeholder="Şifre Giriniz">
                     </div>
                 </div>
             </div>

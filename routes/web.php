@@ -1,3 +1,4 @@
+
 <?php
 
 use Illuminate\Support\Facades\Route;
@@ -18,6 +19,8 @@ use App\Http\Controllers\Backend\UserController;
 Route::get('/', function () {
      return view('welcome');
 });
+
+
 
 
 Route::resource(name: "/Users", controller: UserController::class);
