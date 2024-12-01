@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Hash;
 
 class UserRequest extends FormRequest
 {
@@ -23,9 +24,10 @@ class UserRequest extends FormRequest
      */
     public function rules()
     {
+       $user_id = $this-> request->get( key: "user_id");
         return [
-            "name"=> "required|min:3",
-            "email"=> "required|email|uniquw:App\Models\User,email",
+            "name"=> "required|sometimes|min:3",
+            "email"=> "required|email|unique:App\Models\User,email, $user_id",
             'password' => 'required|sometimes|string|min:5|confirmed'
         ];
     }

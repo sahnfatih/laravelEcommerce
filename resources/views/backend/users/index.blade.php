@@ -311,8 +311,8 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link list-item-delete text-black"
-                                   href="{{url("/users/$user->user_id")}}">
+                                <a class="nav-link  text-black "
+                                   href="{{url("/users/$user->user_id/change-password")}}">
                                     <span data-feather="lock"></span>
                                     Şifre Değiştir
                                 </a>

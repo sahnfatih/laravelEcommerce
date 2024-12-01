@@ -256,39 +256,13 @@
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">Kullanıcılar</h1>
-<div class="btn-toolbar mb-2 mb-md-0">
-    <div class="btn-group me-2">
-        <a href="/users/create" class="btn btn-sm btn-outline-danger">Yeni Ekle</a>
-    </div>
-</div>
+
       </div>
 
-<h2> Yeni Kullanıcı ekle </h2>
+<h2> Şifre Değiştirme ekranı</h2>
       <div class="table-responsive">
-        <form action="{{url("/users")}}" method="POST" autocomplete="off" >
+        <form action="{{url("/users/$user->user_id/change-password")}}" method="POST" autocomplete="off" >
             @csrf
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="mt-2">
-                       <label for="name" class="form-label" >Ad Soyad</label>
-                       <input type="text" class="form-control" id="name" name="name" placeholder="Ad Soyad Giriniz"
-                       value="{{old("name")}}">
-                       @error("name")
-                       <span class="text-danger">{{$message}}</span>
-                       @enderror
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="mt-2">
-                        <label for="email" class="form-label" >Eposta giriniz</label>
-                        <input type="email" class="form-control" id="email" name="email" placeholder="Eposta giriniz"
-                        value="{{old("email")}}">
-                        @error("email")
-                        <span class="text-danger">{{$message}}</span>
-                        @enderror
-                      </div>
-                </div>
-            </div>
             <div class="row">
                 <div class="col-lg-6">
                     <div class="mt-2">
@@ -309,23 +283,6 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                 <div class="col-lg-6">
-                    </div class="form-check mt-4">
-                 <input class="form-check-input" type="checkbox"  id="is_admin" name="is_admin" value="1"></input>
-                    <label class="form-check-label" for="is_admin">
-                    Yetkili Kullanıcı
-                 </label>
-             </div>
-     </div>
-        <div class="col-lg-6">
-            </div class="form-check mt-4">
-                <input class="form-check-input" type="checkbox" id="is_active" name="is_active" value="1"></input>
-                   <label class="form-check-label" for="is_active">
-                   Aktif Kullanıcı
-                </label>
-            </div>
-        </div>
      </div>
             <div class="row">
                 <div class="col-12">

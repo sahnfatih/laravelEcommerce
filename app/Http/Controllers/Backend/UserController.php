@@ -7,6 +7,8 @@ use App\Http\Requests\UserRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\View\View;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -56,7 +58,7 @@ class UserController extends Controller
         $user = new User();
         $user->name = $name;
         $user->email = $email;
-        $user->password = $password;
+        $user->password = Hash::make($password);
         $user->is_admin = $is_admin;
         $user->is_active = $is_active;
 
@@ -126,4 +128,28 @@ class UserController extends Controller
         return response()->json(["message" => "Done", "id" => $id]);
 
     }
+
+  /**
+ * Show the form for changing password.
+ *
+ * @return View
+ */
+public function passwordForm(User $user): View
+{
+    return view("backend.users.password_form", ["user" => $user]);
+}
+
+/**
+ * Handle the change password request.
+ *
+ * @param  \Illuminate\Http\Request  $request
+ * @return RedirectResponse
+ */
+public function changePassword(User $user, UserRequest $request)
+{
+   $password = $request-> get(key: "password");
+   $user->password = Hash::make($password);
+   $user->save();
+   return redirect('/users');
+}
 }
