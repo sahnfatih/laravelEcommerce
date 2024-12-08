@@ -1,155 +1,87 @@
 <?php
-
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
-use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\View\View;
 use Illuminate\Support\Facades\Hash;
-
+use Illuminate\Http\Request;
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $users = User::all();
         return view("backend.users.index", ["users" => $users]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         return view("backend.users.insert_form");
-
-
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  UserRequest  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(UserRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:2',
-        ]);
+        $data = $request->except('_token', 'password_confirmation');
+        $data['password'] = Hash::make($request->password);
+        $data['is_admin'] = $request->has('is_admin') ? 1 : 0;
+        $data['is_active'] = $request->has('is_active') ? 1 : 0;
 
-       $name = $request->get("name");
-       $email = $request->get("email");
-       $password = $request->get("password");
-       $is_admin = $request->get("is_admin", default: 0);
-       $is_active = $request->get("is_active", default: 0);
-
-        $user = new User();
-        $user->name = $name;
-        $user->email = $email;
-        $user->password = Hash::make($password);
-        $user->is_admin = $is_admin;
-        $user->is_active = $is_active;
-
-        $user->save();
-
-
-        return redirect('/users')->with('success', 'Kullanıcı başarıyla kaydedildi!');
+        User::create($data);
+        return redirect()->route('users.index')->with('success', 'Kullanıcı başarıyla oluşturuldu.');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        return "show => $id";
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Contracts\Foundation\Application\Illuminate\Contracts\View\Factory\Illuminate\Contracts\View\View\Illuminate\Http\Response
-     */
     public function edit($id)
     {
-        $user= User::find($id);
-        return view("backend.users.update_form", ["user"=> $user]);
+        $user = User::findOrFail($id);
+        return view("backend.users.update_form", ["user" => $user]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  UserRequest  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(UserRequest $request, $id)
     {
-        $name = $request->get("name");
-        $email = $request->get("email");
-        $is_admin = $request->get("is_admin", default: 0);
-        $is_active = $request->get("is_active", default: 0);
-        $user= User::find($id);
-        $user->name = $name;
-        $user->email = $email;
-        $user->is_admin = $is_admin;
-        $user->is_active = $is_active;
+        $user = User::findOrFail($id);
 
-        $user->save();
+        $data = $request->except('_token', '_method', 'password', 'password_confirmation');
+        $data['is_admin'] = $request->has('is_admin') ? 1 : 0;
+        $data['is_active'] = $request->has('is_active') ? 1 : 0;
 
-         return redirect('/users');
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
+        }
+
+        $user->update($data);
+        return redirect()->route('users.index')->with('success', 'Kullanıcı başarıyla güncellendi.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
         $user->delete();
         return response()->json(["message" => "Done", "id" => $id]);
-
+    }
+    public function passwordForm($id)
+    {
+        $user = User::findOrFail($id);
+        return view("backend.users.password_form", ["user" => $user]);
     }
 
-  /**
- * Show the form for changing password.
- *
- * @return View
- */
-public function passwordForm(User $user): View
-{
-    return view("backend.users.password_form", ["user" => $user]);
-}
+    public function changePassword(Request $request, $id) // Request sınıfını doğru şekilde kullanın
+    {
+        $user = User::findOrFail($id);
 
-/**
- * Handle the change password request.
- *
- * @param  \Illuminate\Http\Request  $request
- * @return RedirectResponse
- */
-public function changePassword(User $user, UserRequest $request)
-{
-   $password = $request-> get(key: "password");
-   $user->password = Hash::make($password);
-   $user->save();
-   return redirect('/users');
-}
+        $request->validate([
+            'password' => 'required|min:6|confirmed'
+        ]);
+
+        try {
+            $user->password = Hash::make($request->password);
+            $user->save();
+
+            return redirect()->route('users.index')
+                ->with('success', 'Şifre başarıyla güncellendi.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Şifre güncellenirken bir hata oluştu.')
+                ->withInput();
+        }
+    }
 }

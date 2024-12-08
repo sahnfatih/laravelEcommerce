@@ -24,10 +24,10 @@ class UserRequest extends FormRequest
      */
     public function rules()
     {
-       $user_id = $this-> request->get( key: "user_id");
+        $user_id = $this->route('user');
         return [
             "name"=> "required|sometimes|min:3",
-            "email"=> "required|email|unique:App\Models\User,email, $user_id",
+            "email"=> "required|email|unique:App\Models\User,email,  " . $user_id,
             'password' => 'required|sometimes|string|min:5|confirmed'
         ];
     }
