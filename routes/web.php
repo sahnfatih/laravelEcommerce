@@ -4,6 +4,7 @@
 use App\Http\Controllers\Backend\AddressController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\UserController;
+use App\Http\Controllers\Backend\CategoryController;
 
 
 /*
@@ -38,3 +39,4 @@ Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.
 Route::resource('users.addresses', AddressController::class)->names('users.addresses');
 Route::resource('addresses', AddressController::class);
 
+Route::resource('categories', CategoryController::class);
