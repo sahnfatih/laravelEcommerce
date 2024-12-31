@@ -33,7 +33,11 @@ Route::middleware('guest')->group(function () {
     Route::get('/uye-ol', [AuthController::class, 'showSignUpForm'])->name('signup.form');
     Route::post('/uye-ol', [AuthController::class, 'signUp'])->name('signup');
 });
-
+Route::get('/uye-ol', [AuthController::class, 'showSignupForm'])->name('signup.form');
+Route::post('/uye-ol', [AuthController::class, 'signup'])->name('signup');
+Route::get('/giris', [AuthController::class, 'showSigninForm'])->name('signin.form');
+Route::post('/giris', [AuthController::class, 'signin'])->name('signin');
+Route::post('/cikis', [AuthController::class, 'signout'])->name('signout');
 // Oturum kapatma
 Route::get('/cikis', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 

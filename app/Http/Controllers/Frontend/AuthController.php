@@ -61,12 +61,13 @@ class AuthController extends Controller
         }
     }
 
-    public function logout(): RedirectResponse
+    public function signout()
     {
         Auth::logout();
+
         request()->session()->invalidate();
         request()->session()->regenerateToken();
 
-        return redirect('/')->with('success', 'Başarıyla çıkış yaptınız.');
+        return redirect('/')->with('success', 'Başarıyla çıkış yapıldı.');
     }
 }
