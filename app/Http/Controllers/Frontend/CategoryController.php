@@ -10,8 +10,16 @@ class CategoryController extends Controller
 {
     public function index(Category $category): View
     {
-        $allCategories = Category::all()->where("is_active", true);
+        $products = Product::with(['category', 'images'])
+                          ->where('category_id', $category->category_id)
+                          ->where("is_active", true)
+                          ->get();
+        $categories = Category::where("is_active", true)->get();
 
-        return view("frontend.home.index", ["categories" => $allCategories, "products" => $category->products]);
+        return view("frontend.home.index", [
+            "categories" => $categories,
+            "products" => $products,
+            "selected_category" => $category
+        ]);
     }
 }

@@ -11,9 +11,14 @@ class HomeController extends Controller
 {
     public function index(): View
     {
-        $products = Product::all()->where("is_active", true);
-        $categories = Category::all()->where("is_active", true);
+        $products = Product::with(['category', 'images'])
+                          ->where("is_active", true)
+                          ->get();
+        $categories = Category::where("is_active", true)->get();
 
-        return view("frontend.home.index", ["categories" => $categories, "products" => $products]);
+        return view("frontend.home.index", [
+            "categories" => $categories,
+            "products" => $products
+        ]);
     }
 }

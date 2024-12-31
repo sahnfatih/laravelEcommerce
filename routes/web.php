@@ -37,7 +37,12 @@ Route::middleware('guest')->group(function () {
 // Oturum kapatma
 Route::get('/cikis', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
-// Sepet işlemleri (auth middleware ile korunmalı)
+// Ödeme rotaları
+Route::middleware(['auth'])->group(function () {
+    Route::get('/odeme', [CheckoutController::class, 'showCheckoutForm'])->name('checkout.form');
+    Route::post('/odeme', [CheckoutController::class, 'processCheckout'])->name('checkout.process');
+});
+// Sepet işlemleri
 Route::middleware(['auth'])->group(function () {
     Route::get('/sepetim', [CartController::class, 'index'])->name('cart.index');
     Route::post('/sepete-ekle/{product}', [CartController::class, 'add'])->name('cart.add');

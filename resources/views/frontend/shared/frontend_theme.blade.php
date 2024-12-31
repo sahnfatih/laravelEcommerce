@@ -289,6 +289,20 @@
             transition: all 0.3s ease;
         }
 
+        .alert-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1050;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .alert {
+            margin-bottom: 0;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
         .form-control:focus {
             border-color: var(--hawk-accent);
             box-shadow: 0 0 0 0.2rem rgba(98, 0, 234, 0.25);
@@ -314,43 +328,30 @@
     </style>
 </head>
 <body class="page-transition">
+    @if(session('success'))
+        <div class="alert-container">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+
+                @if(session('showCartOptions'))
+                    <div class="mt-2">
+                        <a href="{{ route('cart.index') }}" class="btn btn-sm btn-primary me-2">
+                            <i class="fas fa-shopping-cart me-1"></i>Sepete Git
+                        </a>
+                        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="alert">
+                            <i class="fas fa-shopping-bag me-1"></i>Alışverişe Devam Et
+                        </button>
+                    </div>
+                @endif
+            </div>
+        </div>
+    @endif
     <div class="content-wrapper">
         <nav class="navbar navbar-expand-lg">
             <div class="container">
                 <a class="navbar-brand" href="/">
-                    <svg class="hawk-logo" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Şahin başı -->
-                        <path d="M250,100
-                                C300,100 350,150 350,200
-                                L400,180
-                                C420,170 430,190 420,210
-                                L380,240
-                                C370,260 350,270 330,260
-                                L300,250
-                                C280,270 250,280 220,270
-                                L180,290
-                                C160,300 140,290 130,270
-                                L100,220
-                                C90,200 100,180 120,170
-                                L170,150
-                                C190,120 220,100 250,100"
-                            fill="currentColor"/>
-                        <!-- Şahin gözü -->
-                        <circle cx="280" cy="180" r="15" fill="var(--hawk-accent)"/>
-                        <!-- Gaga -->
-                        <path d="M350,200
-                                L420,190
-                                C440,188 445,195 440,210
-                                L380,220
-                                Z"
-                            fill="currentColor"/>
-                        <!-- Alışveriş arabası -->
-                        <rect x="180" y="300" width="140" height="80" rx="10"
-                            fill="currentColor"/>
-                        <circle cx="200" cy="390" r="20" fill="currentColor"/>
-                        <circle cx="300" cy="390" r="20" fill="currentColor"/>
-                    </svg>
-                    HAWKMARKT
+                    <i class="fas fa-store me-2"></i>HAWKMARKT
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
@@ -358,10 +359,14 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="/"><i class="fas fa-home me-1"></i>Anasayfa</a>
+                            <a class="nav-link {{ request()->is('/') ? 'active' : '' }}" href="/">
+                                <i class="fas fa-home me-1"></i>Anasayfa
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/kategoriler"><i class="fas fa-tags me-1"></i>Kategoriler</a>
+                            <a class="nav-link {{ request()->is('kategoriler*') ? 'active' : '' }}" href="/kategoriler">
+                                <i class="fas fa-tags me-1"></i>Kategoriler
+                            </a>
                         </li>
                     </ul>
                     <ul class="navbar-nav align-items-center">
@@ -376,25 +381,46 @@
                                 </label>
                             </div>
                         </li>
-                        @auth()
+                        @auth
                             <li class="nav-item">
-                                <a class="nav-link" href="/sepetim">
+                                <a class="nav-link {{ request()->is('sepetim*') ? 'active' : '' }}" href="{{ route('cart.index') }}">
                                     <i class="fas fa-shopping-cart me-1"></i>Sepetim
-                                    <span class="badge bg-accent">{{session()->get('cart') ? count(session()->get('cart')) : 0}}</span>
+                                    @php
+                                        $cartItemCount = Auth::user()->carts()
+                                            ->where('is_active', true)
+                                            ->first()?->details()
+                                            ->sum('quantity');
+                                    @endphp
+                                    @if($cartItemCount > 0)
+                                        <span class="badge bg-primary">{{ $cartItemCount }}</span>
+                                    @endif
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/hesabim"><i class="fas fa-user me-1"></i>Hesabım</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/cikis"><i class="fas fa-sign-out-alt me-1"></i>Çıkış</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user me-1"></i>{{ Auth::user()->name }}
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <form action="{{ route('logout') }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="dropdown-item">
+                                                <i class="fas fa-sign-out-alt me-1"></i>Çıkış Yap
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
                             </li>
                         @else
                             <li class="nav-item">
-                                <a class="nav-link" href="/giris"><i class="fas fa-sign-in-alt me-1"></i>Giriş Yap</a>
+                                <a class="nav-link {{ request()->is('giris') ? 'active' : '' }}" href="{{ route('signin.form') }}">
+                                    <i class="fas fa-sign-in-alt me-1"></i>Giriş Yap
+                                </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/uye-ol"><i class="fas fa-user-plus me-1"></i>Üye ol</a>
+                                <a class="nav-link {{ request()->is('kayit') ? 'active' : '' }}" href="{{ route('signup.form') }}">
+                                    <i class="fas fa-user-plus me-1"></i>Kayıt Ol
+                                </a>
                             </li>
                         @endauth
                     </ul>
@@ -432,11 +458,12 @@
                 </div>
             </div>
             <hr class="mt-4" style="border-color: var(--hawk-accent);">
-            <div class="text-center mt-3">
-                <p class="mb-0">&copy; 2024 HawkMarkt. Tüm hakları saklıdır.</p>
+            <div class="text-center">
+                <p class="mb-0">&copy; {{ date('Y') }} HawkMarkt. Tüm hakları saklıdır.</p>
             </div>
         </div>
     </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script src="{{asset('js/app.js')}}"></script>
     <script>
@@ -463,6 +490,15 @@
                 }, 200);
             });
         });
+          // Alert otomatik kapanma
+          setTimeout(function() {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(function(alert) {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                });
+            }, 5000);
+
     </script>
 </body>
 </html>

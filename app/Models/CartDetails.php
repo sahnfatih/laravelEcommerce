@@ -12,14 +12,18 @@ class CartDetails extends Model
     protected $primaryKey = "cart_detail_id";
 
     protected $fillable = [
-        'cart_detail_id',
         'cart_id',
         'product_id',
-        'quantity',
+        'quantity'
     ];
+
+    public function cart()
+    {
+        return $this->belongsTo(Cart::class, 'cart_id', 'cart_id');
+    }
 
     public function product()
     {
-        return $this->hasOne(Product::class, "product_id", "product_id");
+        return $this->belongsTo(Product::class, 'product_id', 'product_id');
     }
 }

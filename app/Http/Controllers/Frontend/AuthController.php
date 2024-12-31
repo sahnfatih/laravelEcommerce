@@ -9,7 +9,7 @@ use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -20,17 +20,21 @@ class AuthController extends Controller
 
     public function signIn(SignInRequest $request): RedirectResponse
     {
-        $credentials = $request->only(["email", "password"]);
-        $rememberMe = $request->get("remember-me", false);
+        try {
+            $credentials = $request->only(['email', 'password']);
+            $remember = $request->has('remember-me');
 
-        if (Auth::attempt($credentials, $rememberMe)) {
-            return redirect("/");
-        } else {
-            return redirect()->back()->withErrors(
-                [
-                    "email" => "Lütfen epostanızı kontrol ediniz.",
-                    "password" => "Lütfen şifrenizi kontrol ediniz.",
-                ]);
+            if (Auth::attempt($credentials, $remember)) {
+                $request->session()->regenerate();
+                return redirect()->intended('/')->with('success', 'Başarıyla giriş yaptınız.');
+            }
+
+            return back()->withErrors([
+                'email' => 'Girdiğiniz bilgiler hatalı.',
+            ])->onlyInput('email');
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Giriş yapılırken bir hata oluştu.');
         }
     }
 
@@ -41,20 +45,28 @@ class AuthController extends Controller
 
     public function signUp(SignUpRequest $request): RedirectResponse
     {
-        $user = new User();
-        $data = $this->prepare($request, $user->getFillable());
-        $data["is_active"] = true;
-        $user->fill($data);
-        $user->save();
+        try {
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'is_active' => true
+            ]);
 
-        return Redirect::to("/giris");
+            Auth::login($user);
+
+            return redirect('/')->with('success', 'Hesabınız başarıyla oluşturuldu.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Kayıt olurken bir hata oluştu.');
+        }
     }
 
-    public function logout()
+    public function logout(): RedirectResponse
     {
         Auth::logout();
-        return redirect("/");
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+
+        return redirect('/')->with('success', 'Başarıyla çıkış yaptınız.');
     }
-
-
 }

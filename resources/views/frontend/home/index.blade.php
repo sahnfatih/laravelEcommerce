@@ -1,5 +1,5 @@
 @extends('frontend.shared.frontend_theme')
-@section('title', 'Anasayfa')
+@section('title', isset($selected_category) ? $selected_category->name : 'Anasayfa')
 @section('content')
     <div class="row">
         <div class="col-lg-3">
@@ -9,25 +9,21 @@
                     <a href="/" class="list-group-item list-group-item-action {{!request()->segment(2) ? 'active' : ''}}">
                         <i class="fas fa-border-all me-2"></i>Tüm Ürünler
                     </a>
-                    @if(count($categories) > 0)
-                        @foreach($categories as $category)
-                            <a href="/kategori/{{$category->slug}}"
-                               class="list-group-item list-group-item-action {{request()->segment(2) == $category->slug ? 'active' : ''}}">
-                                <i class="fas fa-angle-right me-2"></i>{{$category->name}}
-                            </a>
-                        @endforeach
-                    @endif
+                    @foreach($categories as $category)
+                        <a href="/kategori/{{$category->slug}}"
+                           class="list-group-item list-group-item-action {{isset($selected_category) && $selected_category->category_id == $category->category_id ? 'active' : ''}}">
+                            <i class="fas fa-angle-right me-2"></i>{{$category->name}}
+                        </a>
+                    @endforeach
                 </div>
             </div>
         </div>
         <div class="col-lg-9">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h4><i class="fas fa-box-open me-2"></i>Ürünler</h4>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-outline-secondary btn-sm">
-                        <i class="fas fa-sort-amount-down"></i> Sırala
-                    </button>
-                </div>
+                <h4>
+                    <i class="fas fa-box-open me-2"></i>
+                    {{isset($selected_category) ? $selected_category->name : 'Tüm Ürünler'}}
+                </h4>
             </div>
 
             @if(count($products) > 0)
@@ -37,7 +33,7 @@
                             <div class="card h-100 product-card">
                                 @if(count($product->images) > 0)
                                     <img src="{{asset("/storage/products/".$product->images[0]->image_url)}}"
-                                         class="card-img-top" alt="{{$product->images[0]->alt}}"
+                                         class="card-img-top" alt="{{$product->name}}"
                                          style="height: 200px; object-fit: cover;">
                                 @endif
                                 <div class="card-body">
@@ -56,10 +52,18 @@
                                     <p class="card-text">{{Str::limit($product->lead, 100)}}</p>
                                 </div>
                                 <div class="card-footer bg-transparent border-top-0">
-                                    <a href="/sepetim/ekle/{{$product->product_id}}"
-                                       class="btn btn-primary w-100">
-                                        <i class="fas fa-cart-plus me-2"></i>Sepete Ekle
+                                    @auth
+                                    <form action="{{ route('cart.add', $product) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="btn btn-primary w-100">
+                                            <i class="fas fa-cart-plus me-2"></i>Sepete Ekle
+                                        </button>
+                                    </form>
+                                @else
+                                    <a href="{{ route('signin.form') }}" class="btn btn-primary w-100">
+                                        <i class="fas fa-sign-in-alt me-2"></i>Giriş Yapın
                                     </a>
+                                @endauth
                                 </div>
                             </div>
                         </div>

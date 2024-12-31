@@ -6,65 +6,59 @@ use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\CartDetails;
 use App\Models\Product;
-use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class CartController extends Controller
 {
-    private string $return_url = "/sepetim";
-
-    public function index(): View
+    public function index()
     {
-        $cart = $this->getOrCreateCart();
-        return view("frontend.cart.index", ["cart" => $cart]);
+        if (!Auth::check()) {
+            return redirect()->route('signin.form');
+        }
+
+        $cart = Cart::where('user_id', Auth::user()->user_id)
+            ->where('is_active', true)
+            ->first();
+
+        $cartItems = $cart ? $cart->details()->with('product')->get() : collect();
+
+        return view('frontend.cart.index', compact('cartItems'));
     }
-
-    /**
-     *
-     * Lists the cart content
-     *
-     * @return Cart
-     */
-    private function getOrCreateCart(): Cart
+    public function add(Product $product)
     {
-        $user = Auth::user();
+        if (!Auth::check()) {
+            return redirect()->route('signin.form');
+        }
+
+        // Aktif sepeti bul veya oluştur
         $cart = Cart::firstOrCreate(
-            ['user_id' => $user->user_id, 'is_active' => true],
-            ['code' => Str::random(8)]
+            [
+                'user_id' => Auth::user()->user_id,
+                'is_active' => true
+            ],
+            [
+                'code' => Str::random(8)
+            ]
         );
-        return $cart;
-    }
 
-    /**
-     * Add product as cart detail
-     *
-     * @param Product $product
-     * @param int $quantity
-     * @return RedirectResponse
-     */
-    public function add(Product $product, int $quantity = 1): RedirectResponse
-    {
-        $cart = $this->getOrCreateCart();
-        $cart->details()->create([
-            "product_id" => $product->product_id,
-            "quantity" => $quantity,
+        // Ürünü sepete ekle
+        CartDetails::create([
+            'cart_id' => $cart->cart_id,
+            'product_id' => $product->product_id,
+            'quantity' => 1
         ]);
 
-        return redirect($this->return_url);
+        // Başarı mesajı ve seçeneklerle birlikte session'a yönlendir
+        return redirect()->back()->with([
+            'success' => 'Ürün sepete eklendi',
+            'showCartOptions' => true // Seçenekleri göstermek için flag
+        ]);
     }
 
-    /**
-     *
-     * Remove cart detail from cart
-     *
-     * @param CartDetails $cartDetails
-     * @return RedirectResponse
-     */
-    public function remove(CartDetails $cartDetails): RedirectResponse
+    public function remove(CartDetails $cartDetails)
     {
         $cartDetails->delete();
-        return redirect($this->return_url);
+        return redirect()->route('cart.index');
     }
 }
