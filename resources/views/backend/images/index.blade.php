@@ -22,9 +22,8 @@
                     <td>{{$loop->iteration}}</td>
                     <td>
                         @if($image->image_url != "")
-                            <img src="{{asset("/storage/products/" . $image->image_url)}}" alt="{{$image->alt}}"
-                                 style="height: 50px">
-                        @endif
+                        <img src="{{asset('storage/products/' . $image->image_url)}}" alt="{{$image->alt}}" style="height: 50px">
+                    @endif
                     </td>
                     <td>{{$image->alt}}</td>
                     <td>

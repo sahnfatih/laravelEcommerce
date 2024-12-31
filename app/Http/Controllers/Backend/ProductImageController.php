@@ -51,12 +51,20 @@ class ProductImageController extends Controller
     public function store(ProductImageRequest $request, Product $product): RedirectResponse
     {
         $productImage = new ProductImage();
+
+        // Dosya yükleme işlemi
+        if ($request->hasFile('image_url')) {
+            $file = $request->file('image_url');
+            $fileName = $file->hashName(); // Benzersiz bir dosya adı oluşturur
+            $file->storeAs('public/products', $fileName); // storage/app/public/products dizinine kaydeder
+            $request->merge(['image_url' => $fileName]);
+        }
+
         $data = $this->prepare($request, $productImage->getFillable());
         $productImage->fill($data);
         $productImage->save();
 
         $this->editReturnUrl($product->product_id);
-
         return Redirect::to($this->returnUrl);
     }
 
