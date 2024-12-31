@@ -5,7 +5,8 @@ use App\Http\Controllers\Backend\AddressController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\CategoryController;
-
+use App\Http\Controllers\Backend\ProductController;
+use App\Http\Controllers\Backend\ProductImageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,3 +41,5 @@ Route::resource('users.addresses', AddressController::class)->names('users.addre
 Route::resource('addresses', AddressController::class);
 
 Route::resource('categories', CategoryController::class);
+Route::resource('products', ProductController::class);
+Route::resource('products.images', ProductImageController::class);

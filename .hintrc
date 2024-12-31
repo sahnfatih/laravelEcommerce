@@ -13,7 +13,8 @@
           "text-align: -webkit-match-parent"
         ]
       }
-    ]
+    ],
+    "css-prefix-order": "off"
   },
   "browserslist": [
     "defaults",
