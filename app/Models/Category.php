@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Category extends Model
@@ -15,13 +14,35 @@ class Category extends Model
 
     protected $fillable = [
         "category_id",
+        "parent_id",
         "name",
         "slug",
-        "is_active",
+        "image",
+        "description",
+        "is_active"
     ];
 
-    public function products(): HasMany
+    // Ana kategorinin alt kategorileri
+    public function children()
     {
-        return $this->hasMany(Product::class, "category_id", "category_id");
+        return $this->hasMany(Category::class, 'parent_id', 'category_id');
+    }
+
+    // Alt kategorinin ana kategorisi
+    public function parent()
+    {
+        return $this->belongsTo(Category::class, 'parent_id', 'category_id');
+    }
+
+    // Kategoriye ait ürünler
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'category_id', 'category_id');
+    }
+
+    // Ürün sayısını almak için
+    public function getProductsCountAttribute()
+    {
+        return $this->products()->count();
     }
 }

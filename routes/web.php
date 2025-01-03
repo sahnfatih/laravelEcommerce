@@ -24,7 +24,7 @@ use App\Http\Controllers\Frontend\CartController;
 */
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/kategori/{category:slug}', [CategoryController::class, 'index'])->name('category.index');
+Route::get('/kategori/{category:slug}', [HomeController::class, 'index'])->name('category.index');
 
 // Kimlik doğrulama rotaları
 Route::middleware('guest')->group(function () {
