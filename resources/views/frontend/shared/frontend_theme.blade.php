@@ -104,68 +104,77 @@
         }
 
         /* Animasyonlu Theme Switch */
-        .theme-switch-wrapper {
-            position: relative;
-            width: 60px;
-            height: 30px;
-            margin: 0 15px;
-        }
+ /* Tema Switch Stilleri */
+.theme-switch-wrapper {
+    cursor: pointer;
+    padding: 0.625rem 1rem;
+}
 
-        .theme-switch {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
+.theme-switch-wrapper:hover {
+    background-color: var(--hawk-hover);
+}
 
-        .theme-switch-label {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 60px;
-            height: 30px;
-            background: linear-gradient(145deg, #6200ea, #b388ff);
-            border-radius: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+.theme-switch-container {
+    position: relative;
+    width: 40px;
+    height: 20px;
+}
 
-        .theme-switch-label:after {
-            content: '';
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 24px;
-            height: 24px;
-            background-color: white;
-            border-radius: 50%;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
+.theme-switch {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
 
-        .theme-switch:checked + .theme-switch-label {
-            background: linear-gradient(145deg, #7c4dff, #b388ff);
-        }
+.theme-switch-label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 40px;
+    height: 20px;
+    background-color: var(--hawk-border);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
 
-        .theme-switch:checked + .theme-switch-label:after {
-            transform: translateX(30px);
-        }
+.switch-toggle {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--hawk-primary);
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 3px rgba(98, 0, 234, 0.2);
+}
 
-        .theme-switch-icons {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 8px;
-            color: white;
-            z-index: 1;
-            pointer-events: none;
-        }
+.theme-switch:checked + .theme-switch-label {
+    background: linear-gradient(145deg, var(--hawk-secondary), var(--hawk-accent));
+}
 
-        .theme-switch-icons i {
-            font-size: 14px;
-        }
+.theme-switch:checked + .theme-switch-label .switch-toggle {
+    transform: translateX(20px);
+    background: var(--hawk-primary);
+}
+
+.theme-switch:focus + .theme-switch-label {
+    box-shadow: 0 0 1px var(--hawk-accent);
+}
+
+/* Dark Mode için tema switch stilleri */
+[data-bs-theme="dark"] .theme-switch-wrapper:hover {
+    background-color: var(--hawk-hover);
+}
+
+[data-bs-theme="dark"] .theme-switch-label {
+    background-color: var(--hawk-border);
+}
+
+[data-bs-theme="dark"] .switch-toggle {
+    background: var(--hawk-primary);
+}
 
         /* Card Styles */
 
@@ -428,6 +437,132 @@
     font-size: 1.5rem;
     letter-spacing: 0.5px;
 
+}.user-dropdown {
+    margin-left: 1rem;
+}
+
+.user-toggle {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: var(--bs-body-color);
+}
+
+.user-toggle:hover {
+    background: var(--bs-gray-100);
+    color: var(--bs-primary);
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, var(--hawk-secondary), var(--hawk-accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.user-avatar:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(98, 0, 234, 0.2);
+}
+
+.avatar-text {
+    color: var(--hawk-primary);
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+}
+
+.user-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-right: 0.5rem;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Dropdown Menu Stilleri */
+.dropdown-menu {
+    padding: 0.5rem 0;
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    border-radius: 0.5rem;
+    min-width: 200px;
+}
+
+.dropdown-item {
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    color: var(--bs-body-color);
+    transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: var(--bs-gray-100);
+    color: var(--bs-primary);
+}
+
+.dropdown-item i {
+    width: 1.25rem;
+    text-align: center;
+}
+
+.dropdown-divider {
+    margin: 0.5rem 0;
+    opacity: 0.1;
+}
+
+/* Dark Mode Uyumluluğu */
+@media (prefers-color-scheme: dark) {
+    .user-toggle {
+        color: var(--bs-light);
+    }
+
+    .user-toggle:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--bs-primary);
+    }
+
+    .dropdown-menu {
+        background-color: var(--bs-dark);
+        border: 1px solid var(--bs-border-color);
+    }
+
+    .dropdown-item {
+        color: var(--bs-light);
+    }
+
+    .dropdown-item:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .dropdown-divider {
+        border-color: var(--bs-border-color);
+    }
+}
+
+/* Responsive Ayarlar */
+@media (max-width: 768px) {
+    .user-name {
+        display: none;
+    }
+
+    .user-avatar {
+        margin-right: 0;
+    }
+
+    .user-toggle {
+        padding: 0.25rem;
+    }
 }
 
     </style>
@@ -464,7 +599,7 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto">
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a class="nav-link {{ request()->is('/') ? 'active' : '' }}" href="/">
                                 <i class="fas fa-home me-1"></i>Anasayfa
                             </a>
@@ -473,20 +608,11 @@
                             <a class="nav-link {{ request()->is('kategoriler*') ? 'active' : '' }}" href="/kategoriler">
                                 <i class="fas fa-tags me-1"></i>Kategoriler
                             </a>
-                        </li>
+                        </li> --}}
+
                     </ul>
                     <ul class="navbar-nav align-items-center">
-                        <li class="nav-item">
-                            <div class="theme-switch-wrapper">
-                                <input type="checkbox" class="theme-switch" id="theme-switch">
-                                <label class="theme-switch-label" for="theme-switch">
-                                    <div class="theme-switch-icons">
-                                        <i class="fas fa-sun"></i>
-                                        <i class="fas fa-moon"></i>
-                                    </div>
-                                </label>
-                            </div>
-                        </li>
+
                         @auth
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->is('sepetim*') ? 'active' : '' }}" href="{{ route('cart.index') }}">
@@ -502,21 +628,52 @@
                                     @endif
                                 </a>
                             </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                                    <i class="fas fa-user me-1"></i>{{ Auth::user()->name }}
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li>
-                                        <form action="{{ route('logout') }}" method="POST">
-                                            @csrf
-                                            <button type="submit" class="dropdown-item">
-                                                <i class="fas fa-sign-out-alt me-1"></i>Çıkış Yap
-                                            </button>
-                                        </form>
-                                    </li>
-                                </ul>
-                            </li>
+                                                    <!-- Kullanıcı Dropdown Menüsü -->
+                         <!-- Kullanıcı Profil Dropdown -->
+                         <div class="nav-item dropdown user-dropdown">
+                            <a href="#" class="nav-link dropdown-toggle user-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                <div class="user-avatar">
+                                    <div class="avatar-text">{{ substr(auth()->user()->name, 0, 1) }}</div>
+                                </div>
+                                <span class="user-name">{{ auth()->user()->name }}</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('orders.index') }}">
+                                        <i class="fas fa-shopping-bag me-2"></i>Siparişlerim
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('user.settings') }}">
+                                        <i class="fas fa-cog me-2"></i>Ayarlarım
+                                    </a>
+                                </li>
+                                <li>
+                                    <div class="dropdown-item theme-switch-wrapper">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <span><i class="fas fa-moon me-2"></i>Tema</span>
+                                            <div class="theme-switch-container">
+                                                <input type="checkbox" class="theme-switch" id="theme-switch">
+                                                <label class="theme-switch-label" for="theme-switch">
+                                                    <span class="switch-toggle"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="{{ route('logout') }}"
+                                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Çıkış Yap
+                                    </a>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                        @csrf
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+
                         @else
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->is('giris') ? 'active' : '' }}" href="{{ route('signin.form') }}">

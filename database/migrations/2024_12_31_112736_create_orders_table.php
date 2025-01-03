@@ -1,35 +1,44 @@
 <?php
 
-use App\Models\Cart;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOrdersTable extends Migration
+return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('orders', function (Blueprint $table) {
-            $table->id("order_id");
-            $table->foreignIdFor(Cart::class, "cart_id");
-            $table->string("code");
-            $table->softDeletes();
+            $table->id('order_id');
+            $table->unsignedBigInteger('user_id'); // user_id sütunu eklendi
+            $table->string('order_number')->unique();
+            $table->decimal('subtotal', 10, 2);
+            $table->decimal('tax', 10, 2);
+            $table->decimal('shipping', 10, 2)->default(0);
+            $table->decimal('total', 10, 2);
+            $table->string('status')->default('pending');
+            $table->string('payment_method')->nullable();
+            $table->string('payment_id')->nullable();
+            $table->string('transaction_id')->nullable();
+            $table->string('address');
+            $table->string('city');
+            $table->string('district')->nullable();
+            $table->string('postal_code')->nullable();
+            $table->string('phone');
+            $table->text('notes')->nullable();
+            $table->timestamp('paid_at')->nullable();
             $table->timestamps();
+            $table->softDeletes();
+
+            $table->foreign('user_id')
+                  ->references('user_id')
+                  ->on('users')
+                  ->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('orders');
     }
-}
+};

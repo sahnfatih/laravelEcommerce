@@ -30,5 +30,10 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
+    'iyzico' => [
+    'api_key' => env('IYZICO_API_KEY'),
+    'secret_key' => env('IYZICO_SECRET_KEY'),
+    'base_url' => env('IYZICO_BASE_URL', 'https://sandbox-api.iyzipay.com'),
+],
 
 ];

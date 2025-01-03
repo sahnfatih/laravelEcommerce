@@ -10,8 +10,9 @@ use App\Http\Controllers\Backend\ProductImageController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\AuthController;
 use App\Http\Controllers\Frontend\CartController;
-
-
+use App\Http\Controllers\Backend\OrderController;
+use App\Http\Controllers\Backend\PaymentController;
+use App\Http\Controllers\Frontend\UserSettingsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -43,14 +44,29 @@ Route::get('/cikis', [AuthController::class, 'logout'])->name('logout')->middlew
 
 // Ödeme rotaları
 Route::middleware(['auth'])->group(function () {
-    Route::get('/odeme', [CheckoutController::class, 'showCheckoutForm'])->name('checkout.form');
-    Route::post('/odeme', [CheckoutController::class, 'processCheckout'])->name('checkout.process');
+    // Sipariş Route'ları
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+    Route::get('/orders/{order}/invoice', [OrderController::class, 'downloadInvoice'])->name('orders.invoice');
+    Route::get('/siparislerim', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/siparislerim/{order}', [OrderController::class, 'show'])->name('orders.show');
+    // Ödeme Route'ları
+    Route::get('/odeme/{order}/checkout', [PaymentController::class, 'checkout'])->name('payment.checkout');
+    Route::post('/odeme/{order}/process', [PaymentController::class, 'process'])->name('payment.process');
+    Route::get('/odeme/{order}/basarili', [PaymentController::class, 'success'])->name('payment.success');
+    Route::get('/odeme/{order}/basarisiz', [PaymentController::class, 'failed'])->name('payment.failed');
+
+    Route::get('/ayarlar', [UserSettingsController::class, 'index'])->name('user.settings');
+    Route::put('/ayarlar', [UserSettingsController::class, 'update'])->name('user.settings.update');
+    Route::put('/ayarlar/sifre', [UserSettingsController::class, 'changePassword'])->name('user.settings.password');
 });
 // Sepet işlemleri
 Route::middleware(['auth'])->group(function () {
     Route::get('/sepetim', [CartController::class, 'index'])->name('cart.index');
-    Route::post('/sepete-ekle/{product}', [CartController::class, 'add'])->name('cart.add');
-    Route::delete('/sepetten-cikar/{cartDetails}', [CartController::class, 'remove'])->name('cart.remove');
+    Route::post('/sepet/ekle/{product}', [CartController::class, 'add'])->name('cart.add');
+    Route::delete('/sepet/sil/{cartDetails}', [CartController::class, 'remove'])->name('cart.remove');
+    Route::post('/sepet/odeme', [CartController::class, 'checkout'])->name('cart.checkout');
 });
 Route::get('/users/{user}/change-password', [UserController::class, 'passwordForm'])->name('users.change-password.form');
 Route::post('/users/{user}/change-password', [UserController::class, 'changePassword'])->name('users.change-password');
